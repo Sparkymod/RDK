@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Dagher.Core
+namespace RDK.Core
 {
     public abstract class Singleton<T> where T : class
     {

@@ -3,12 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dagher", "Dagher\Dagher.csproj", "{C27AC3A5-E8DF-4D66-9215-4C2E37541BC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDK", "RDK\RDK.csproj", "{C27AC3A5-E8DF-4D66-9215-4C2E37541BC0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Description = This is a Library use as a helper for C# with .NET Core 5 projects
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{C27AC3A5-E8DF-4D66-9215-4C2E37541BC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

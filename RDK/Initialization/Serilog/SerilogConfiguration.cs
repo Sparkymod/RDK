@@ -1,6 +1,6 @@
 ﻿using Serilog;
 
-namespace Dagher.Initialization.Serilog
+namespace RDK.Initialization.Serilog
 {
     public class SerilogConfiguration
     {

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Core;
 
-namespace Dagher
+namespace RDK
 {
     public class Program
     {
@@ -11,15 +11,10 @@ namespace Dagher
 
         public static void Main(string[] args)
         {
-            Settings.LoadBasicSettings();
+            Settings.LoadBasic();
             
             Log.Information("Test");
             Console.ReadKey();
         }
-    }
-
-    public partial class UserStorage
-    {
-        private readonly DbContextOptions options;
     }
 }

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Dagher.Core
+namespace RDK.Core
 {
     public class ConsoleBase
     {
