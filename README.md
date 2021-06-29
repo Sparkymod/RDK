@@ -2,7 +2,7 @@
 ![CS](https://img.shields.io/badge/C%23%20-%23239120.svg?&style=flat&logo=c%2B%2B&logoColor=white) 
 ![.Net](https://img.shields.io/badge/.NET_5.0-%230059b3.svg?&style=flat&logo=&logoColor=white)
 
-This is a Library use as a helper for  with .NET Core 5 projects
+This is a Library use as helper in C# .NET 5.0 projects
 
 
 ## License 
