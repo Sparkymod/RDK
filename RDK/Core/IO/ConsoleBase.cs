@@ -2,23 +2,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RDK.Core
+namespace RDK.Core.IO
 {
     public class ConsoleBase
     {
-        private static readonly string[] AsciiLogo =
-{
-            "\n",
-            "  ____                 _                  ",
-            " |  _ \\   __ _   __ _ | |__    ___  _ __  ",
-            " | | | | / _` | / _` || '_ \\  / _ \\| '__| ",
-            " | |_| || (_| || (_| || | | ||  __/| |    ",
-            " |____/  \\__,_| \\__, ||_| |_| \\___||_|    ",
-            "                |___/                     ",
-            "\n",
-        };
-        private static readonly ConsoleColor[] LogoColors =
-{
+        public string[] Logo { get; set; }
+
+        private readonly ConsoleColor[] LogoColors =
+        {
             ConsoleColor.DarkCyan,
             ConsoleColor.DarkRed,
             ConsoleColor.DarkGray,
@@ -28,6 +19,8 @@ namespace RDK.Core
             ConsoleColor.Red,
             ConsoleColor.White,
         };
+
+        public ConsoleBase() { }
 
         public void SetTitle(string title)
         {
@@ -39,7 +32,7 @@ namespace RDK.Core
             ConsoleColor color = Console.ForegroundColor;
             Console.ForegroundColor = LogoColors.ElementAt(new Random().Next(LogoColors.Length));
 
-            foreach (string line in AsciiLogo)
+            foreach (string line in Logo)
             {
                 int padding = (Console.BufferWidth + line.Length) / 2;
                 Console.WriteLine(line.PadLeft(padding));
@@ -51,6 +44,6 @@ namespace RDK.Core
         protected virtual void Process() { }
 
         public void Start() => Task.Factory.StartNew(Process);
-        
+
     }
 }

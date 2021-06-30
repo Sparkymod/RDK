@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using RDK.Core.Styling;
 
 namespace RDK.Core
 {
@@ -25,6 +26,7 @@ namespace RDK.Core
                 CreateInstance(typeof(T));
             }
 
+            // Create the instance of T
             public static T CreateInstance(Type type)
             {
                 ConstructorInfo[] constructorInfos = type.GetConstructors(BindingFlags.Instance | BindingFlags.Public);
@@ -53,5 +55,7 @@ namespace RDK.Core
         }
 
         #endregion
+
+        public override string ToString() => $"{TypeStyles<T>.T_FullName(Instance)}";
     }
 }
