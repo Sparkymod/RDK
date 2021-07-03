@@ -2,7 +2,7 @@
 using System.Reflection;
 using RDK.Core.Styling;
 
-namespace RDK.Core
+namespace RDK.Core.Reflection
 {
     public abstract class Singleton<T> where T : class
     {

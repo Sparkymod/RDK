@@ -1,5 +1,5 @@
 ﻿using RDK.Core.IO;
-using RDK.Initialization.Serilog;
+using RDK.Initialization;
 using System.Globalization;
 
 namespace RDK
@@ -9,15 +9,16 @@ namespace RDK
         private static ConsoleBase ConsoleInterface { get; set; } = new ConsoleBase();
 
         public static readonly string ConsoleTitle = "RDK Library";
-        public static readonly string Version = "0.0.1";
+        public static readonly string Version = "0.0.3";
         public static readonly string[] AsciiLogo =
         {
+            $"{ConsoleTitle} - {Version}",
             " ____    ____    _  __",
             "|  _ \\  |  _ \\  | |/ /",
             "| |_) | | | | | | ' / ",
             "|  _ <  | |_| | | . \\ ",
             "|_| \\_\\ |____/  |_|\\_\\",
-            "Library use as helper in C# .NET 5.0 projects",
+            "Library use as helper in C# .NET 5.0 projects.",
         };
         public static readonly string Language = "en-US";
 
@@ -30,7 +31,7 @@ namespace RDK
 
         private static void LoadConsole()
         {
-            SerilogConfiguration.Load();
+            SerilogConfig.Load();
 
             ConsoleInterface.Logo = AsciiLogo;
             ConsoleInterface.DrawAsciiLogo();

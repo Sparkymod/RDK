@@ -2,9 +2,9 @@
 using Pastel;
 using RDK.Core.Styling;
 
-namespace RDK.Initialization.Serilog
+namespace RDK.Initialization
 {
-    public class SerilogConfiguration
+    public class SerilogConfig
     {
         private static string Template { get; set; } = "{Timestamp:HH:mm:ss} [{Level:u3}]: {Message:lj} {NewLine}"+"{Exception}".Pastel("#E05561");
 
