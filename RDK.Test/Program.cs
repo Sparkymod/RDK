@@ -16,18 +16,18 @@ using RDK.Core.IO;
 using RDK.Core.Cryptography;
 using RDK.Core.Extensions;
 using RDK.Initialization;
-using Pastel;
 
-namespace RDK
+namespace RDK.Test
 {
-    public class Program
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
             Settings.LoadBasic();
 
-          
+
             Log.Debug("Repository starter with: ");
+            Log.Debug("Mámalo, tengo todo lo que necesito a continuación.".RemoveAccents());
 
             IContainer testContainer = AutofacConfig.Configure();
             using ILifetimeScope scope = testContainer.BeginLifetimeScope();

@@ -19,7 +19,7 @@ namespace RDK.Core.Extensions
         /// </summary>
         /// <param name="type">Current Type.</param>
         /// <param name="interfaceType">The interface to be searched.</param>
-        /// <returns>True or false if it finds a result.</returns>
+        /// <returns><see langword="true"/> if it finds a result; otherwise <see langword="false"/></returns>
         public static bool HasInterface(this Type type, Type interfaceType) => type.FindInterfaces(FilterByName, interfaceType).Length > 0;
 
         /// <summary>
