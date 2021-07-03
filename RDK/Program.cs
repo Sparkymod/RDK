@@ -26,8 +26,7 @@ namespace RDK
         {
             Settings.LoadBasic();
 
-
-
+          
             Log.Debug("Repository starter with: ");
 
             IContainer testContainer = AutofacConfig.Configure();
