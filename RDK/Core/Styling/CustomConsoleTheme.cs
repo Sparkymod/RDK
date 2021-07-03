@@ -4,7 +4,7 @@ using Serilog.Sinks.SystemConsole.Themes;
 
 namespace RDK.Core.Styling
 {
-    public class CustomConsoleTheme : ConsoleTheme
+    public sealed class CustomConsoleTheme : ConsoleTheme
     {
         /// <summary>
         /// True if styling applied by the theme is written into the output, and can thus be
