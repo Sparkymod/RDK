@@ -16,6 +16,8 @@ using RDK.Core.IO;
 using RDK.Core.Cryptography;
 using RDK.Core.Extensions;
 using RDK.Initialization;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RDK.Test
 {
@@ -25,12 +27,46 @@ namespace RDK.Test
         {
             Settings.LoadBasic();
 
+            Log.Debug("Repository starter with: ".RemoveSpecialChars());
+            Log.Debug("continuación.".RemoveAccents());
+            Log.Debug(new AsyncRandom().RandomString(10).FirstLetterUpper().ConcatCopy(3));
+            Log.Debug("Wrap \"a few words\" with quotes.".EscapeString());
 
-            Log.Debug("Repository starter with: ");
-            Log.Debug("Mámalo, tengo todo lo que necesito a continuación.".RemoveAccents());
+            LoadAssembly load = new();
+            load.RegisterAssembly(Assembly.LoadFrom("RDK"));
+            load.Init();
 
             IContainer testContainer = AutofacConfig.Configure();
             using ILifetimeScope scope = testContainer.BeginLifetimeScope();
+
+            Log.Debug(Cryptography.GeneratePassword());
+
+        }
+    }
+
+    public class LoadAssembly
+    {
+        private List<Assembly> m_assemblies = new();
+
+        public static ILogger logger = Log.Logger;
+
+        public void RegisterAssembly(Assembly assembly)
+        {
+            m_assemblies.Add(assembly);
+        }
+
+        public void Init()
+        {
+            foreach (Assembly assembly in m_assemblies)
+            {
+                foreach (Type type in assembly.GetTypes())
+                {
+                    if (type.IsClass)
+                    {
+                        logger.Debug(type.FullName());
+                    }
+                }
+            }
         }
     }
 }

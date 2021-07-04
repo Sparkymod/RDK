@@ -34,7 +34,7 @@ namespace RDK.Core.Mathematics
         {
             byte[] b = new byte[4];
             RandNumGen.GetBytes(b);
-            return (double)BitConverter.ToUInt32(b, 0) / UInt32.MaxValue;
+            return (double)BitConverter.ToUInt32(b, 0) / uint.MaxValue;
         }
 
         ///<summary>
@@ -52,7 +52,7 @@ namespace RDK.Core.Mathematics
         ///</summary>
         public int Next()
         {
-            return Next(0, Int32.MaxValue);
+            return Next(0, int.MaxValue);
         }
 
         ///<summary>

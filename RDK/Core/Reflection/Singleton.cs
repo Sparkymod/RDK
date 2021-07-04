@@ -56,6 +56,6 @@ namespace RDK.Core.Reflection
 
         #endregion
 
-        public override string ToString() => $"{TypeStyles<T>.T_FullName(Instance)}";
+        public override string ToString() => $"{Instance.GetType().FullName()}";
     }
 }

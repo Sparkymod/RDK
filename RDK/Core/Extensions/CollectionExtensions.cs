@@ -42,9 +42,24 @@ namespace RDK.Core.Extensions
 
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
-            HashSet<TKey> knownKeys = new HashSet<TKey>();
+            HashSet<TKey> knownKeys = new ();
             return source.Where(element => knownKeys.Add(keySelector(element)));
         }
+
+        /// <summary>
+        ///     Avoids if statements when building predicates and lambdas for a query.
+        ///     Useful when you don't know at compile time whether a filter should apply.
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="condition"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public static IEnumerable<TSource> WhereIf<TSource>(this IEnumerable<TSource> source, bool condition, Func<TSource, bool> predicate) 
+            => (condition == true) ? source.Where(predicate) : source;
+
+        public static IEnumerable<TSource> WhereIf<TSource>(this IEnumerable<TSource> source, bool condition, Func<TSource, int, bool> predicate)
+            => (condition == true) ? source.Where(predicate) : source;
 
         public static bool CompareEnumerable<T>(this IEnumerable<T> firstIE, IEnumerable<T> secondIE)
         {
@@ -235,5 +250,15 @@ namespace RDK.Core.Extensions
         public static string ToString(this IEnumerable collection, string conj) => collection != null ? string.Join(conj, ToStringArr(collection)) : "(null)";
 
         public static T GetOrDefault<T>(this IList<T> list, int index) => index >= list.Count ? default : list[index];
+
+        /// <summary>
+        /// Converts an enumeration of groupings into a Dictionary of those groupings.
+        /// </summary>
+        /// <typeparam name="TKey">Key type of the grouping and dictionary.</typeparam>
+        /// <typeparam name="TValue">Element type of the grouping and dictionary list.</typeparam>
+        /// <param name="groupings">The enumeration of groupings from a GroupBy() clause.</param>
+        /// <returns>A dictionary of groupings such that the key of the dictionary is TKey type and the value is List of TValue type.</returns>
+        public static Dictionary<TKey, List<TValue>> ToDictionary<TKey, TValue>(this IEnumerable<IGrouping<TKey, TValue>> groupings) 
+            => groupings.ToDictionary(group => group.Key, group => group.ToList());
     }
 }

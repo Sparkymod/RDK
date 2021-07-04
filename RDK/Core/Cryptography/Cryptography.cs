@@ -3,11 +3,19 @@ using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using RDK.Core.Mathematics;
 
 namespace RDK.Core.Cryptography
 {
     public static class Cryptography
     {
+        public static string GeneratePassword()
+        {
+            CryptoRandom random = new();
+            int randomNumber = random.Next(50000, int.MaxValue);
+            return Convert.ToBase64String(Encoding.Default.GetBytes(randomNumber.ToString()));
+        }
+
         #region MD5
 
         /// <summary>
@@ -18,7 +26,7 @@ namespace RDK.Core.Cryptography
         public static string GetMD5Hash(string input)
         {
             string md5Result;
-            MD5 md5Hasher  = MD5.Create();
+            MD5 md5Hasher = MD5.Create();
             byte[] data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(input));
             StringBuilder sBuilder = new();
 
@@ -53,7 +61,7 @@ namespace RDK.Core.Cryptography
 
         public static string GetFileMD5HashBase64(string fileName)
         {
-            MD5 md5Hasher = MD5.Create(); 
+            MD5 md5Hasher = MD5.Create();
             return Convert.ToBase64String(md5Hasher.ComputeHash(File.ReadAllBytes(fileName)));
         }
 
@@ -95,6 +103,116 @@ namespace RDK.Core.Cryptography
             string decryptedValue = Encoding.UTF8.GetString(rsa.Decrypt(value, false));
 
             return decryptedValue;
+        }
+
+        #pragma warning disable CA1416 // Validate platform compatibility
+        /// <summary>
+        /// Encryptes a string using the supplied key. Encoding is done using RSA encryption.
+        /// </summary>
+        /// <param name="stringToEncrypt">String that must be encrypted.</param>
+        /// <param name="key">Encryptionkey.</param>
+        /// <returns>A string representing a byte array separated by a minus sign.</returns>
+        /// <exception cref="ArgumentException">Occurs when stringToEncrypt or key is null or empty.</exception>
+        public static string Encrypt(this string stringToEncrypt, string key)
+        {
+            if (string.IsNullOrEmpty(stringToEncrypt))
+            {
+                throw new ArgumentException("An empty string value cannot be encrypted.");
+            }
+
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Cannot encrypt using an empty key. Please supply an encryption key.");
+            }
+
+            CspParameters cspp = new()
+            {
+                KeyContainerName = key
+            };
+
+            RSACryptoServiceProvider rsa = new(cspp);
+            rsa.PersistKeyInCsp = true;
+
+            byte[] bytes = rsa.Encrypt(Encoding.UTF8.GetBytes(stringToEncrypt), true);
+
+            return BitConverter.ToString(bytes);
+        }
+
+        /// <summary>
+        /// Decryptes a string using the supplied key. Decoding is done using RSA encryption.
+        /// </summary>
+        /// <param name="stringToDecrypt">String that must be decrypted.</param>
+        /// <param name="key">Decryptionkey.</param>
+        /// <returns>The decrypted string or null if decryption failed.</returns>
+        /// <exception cref="ArgumentException">Occurs when stringToDecrypt or key is null or empty.</exception>
+        public static string Decrypt(this string stringToDecrypt, string key)
+        {
+            string result = null;
+
+            if (string.IsNullOrEmpty(stringToDecrypt))
+            {
+                throw new ArgumentException("An empty string value cannot be encrypted.");
+            }
+
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Cannot decrypt using an empty key. Please supply a decryption key.");
+            }
+
+            try
+            {
+                CspParameters cspp = new()
+                {
+                    KeyContainerName = key
+                };
+
+                RSACryptoServiceProvider rsa = new(cspp);
+                rsa.PersistKeyInCsp = true;
+
+                string[] decryptArray = stringToDecrypt.Split(new string[] { "-" }, StringSplitOptions.None);
+                byte[] decryptByteArray = Array.ConvertAll(decryptArray, (s => Convert.ToByte(byte.Parse(s, NumberStyles.HexNumber))));
+
+
+                byte[] bytes = rsa.Decrypt(decryptByteArray, true);
+
+                result = Encoding.UTF8.GetString(bytes);
+
+            }
+            finally
+            {
+                // no need for further processing
+            }
+
+            return result;
+        }
+        #pragma warning restore CA1416 // Validate platform compatibility
+
+        #endregion
+
+        #region SHA256
+        public static string GetSHA256(string input)
+        {
+            SHA256 sha256 = SHA256.Create();
+            ASCIIEncoding encoding = new();
+            byte[] stream;
+            StringBuilder sBuilder = new();
+
+            stream = sha256.ComputeHash(encoding.GetBytes(input));
+
+            for (int i = 0; i < stream.Length; i++)
+            {
+                sBuilder.AppendFormat("{0:x2}", stream[i]);
+            }
+
+            return sBuilder.ToString();
+        }
+
+        public static bool VerifySHA256(string input, string sha256)
+        {
+            string shaOfInput = GetSHA256(input);
+            StringComparer comparer = StringComparer.OrdinalIgnoreCase;
+
+            return comparer.Compare(shaOfInput, sha256) == 0;
         }
 
         #endregion
