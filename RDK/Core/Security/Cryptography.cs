@@ -3,19 +3,12 @@ using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using RDK.Core.Mathematics;
+using RDK.Core.Helpers;
 
-namespace RDK.Core.Cryptography
+namespace RDK.Core.Security
 {
     public static class Cryptography
     {
-        public static string GeneratePassword()
-        {
-            CryptoRandom random = new();
-            int randomNumber = random.Next(50000, int.MaxValue);
-            return Convert.ToBase64String(Encoding.Default.GetBytes(randomNumber.ToString()));
-        }
-
         #region MD5
 
         /// <summary>
@@ -105,7 +98,7 @@ namespace RDK.Core.Cryptography
             return decryptedValue;
         }
 
-        #pragma warning disable CA1416 // Validate platform compatibility
+#pragma warning disable CA1416 // Validate platform compatibility
         /// <summary>
         /// Encryptes a string using the supplied key. Encoding is done using RSA encryption.
         /// </summary>
@@ -185,7 +178,7 @@ namespace RDK.Core.Cryptography
 
             return result;
         }
-        #pragma warning restore CA1416 // Validate platform compatibility
+#pragma warning restore CA1416 // Validate platform compatibility
 
         #endregion
 
@@ -216,5 +209,7 @@ namespace RDK.Core.Cryptography
         }
 
         #endregion
+
+        public static string GeneratePassword() => Convert.ToBase64String(Encoding.Default.GetBytes(MathHelper.CryptoRandom.Next(50000, int.MaxValue).ToString()));
     }
 }

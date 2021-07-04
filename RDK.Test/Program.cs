@@ -7,13 +7,10 @@ using Autofac;
 using Serilog;
 using RDK;
 using RDK.Core;
-using RDK.Core.Attributes;
-using RDK.Core.Cache;
-using RDK.Core.Mathematics;
+using RDK.Core.Helpers;
 using RDK.Core.Threading;
 using RDK.Core.Styling;
-using RDK.Core.IO;
-using RDK.Core.Cryptography;
+using RDK.Core.Security;
 using RDK.Core.Extensions;
 using RDK.Initialization;
 using System.Collections.Generic;
@@ -34,7 +31,7 @@ namespace RDK.Test
 
             LoadAssembly load = new();
             load.RegisterAssembly(Assembly.LoadFrom("RDK"));
-            load.Init();
+            load.LoadTypeClass();
 
             IContainer testContainer = AutofacConfig.Configure();
             using ILifetimeScope scope = testContainer.BeginLifetimeScope();
@@ -48,14 +45,14 @@ namespace RDK.Test
     {
         private List<Assembly> m_assemblies = new();
 
-        public static ILogger logger = Log.Logger;
+        public ILogger logger = Log.Logger;
 
         public void RegisterAssembly(Assembly assembly)
         {
             m_assemblies.Add(assembly);
         }
 
-        public void Init()
+        public void LoadTypeClass()
         {
             foreach (Assembly assembly in m_assemblies)
             {

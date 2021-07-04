@@ -74,4 +74,10 @@ namespace RDK.Core.Styling
             return 0;
         }
     }
+
+    public static class ThemeCollection
+    {
+        // Custome theme for Serilog.
+        public static CustomConsoleTheme RDKSerilogTheme { get; } = new CustomConsoleTheme();
+    }
 }

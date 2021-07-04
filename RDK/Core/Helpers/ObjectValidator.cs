@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RDK.Core.Cache
+namespace RDK.Core.Helpers
 {
     public sealed class ObjectValidator<T>
     {

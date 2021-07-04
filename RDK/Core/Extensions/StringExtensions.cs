@@ -154,10 +154,10 @@ namespace RDK.Core.Extensions
 
         public static string RemoveWhitespace(this string input) => new(input.ToCharArray().Where(c => !char.IsWhiteSpace(c)).ToArray());
 
-        public static string GetMD5(this string input) => Cryptography.Cryptography.GetMD5Hash(input);
+        public static string GetMD5(this string input) => Security.Cryptography.GetMD5Hash(input);
 
-        public static string GetSHA256(this string input) => Cryptography.Cryptography.GetSHA256(input);
+        public static string GetSHA256(this string input) => Security.Cryptography.GetSHA256(input);
 
-        public static string GetRSA(this string input, RSAParameters param) => Cryptography.Cryptography.EncryptRSA(input, param);
+        public static string GetRSA(this string input, RSAParameters param) => Security.Cryptography.EncryptRSA(input, param);
     }
 }

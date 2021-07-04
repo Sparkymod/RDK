@@ -1,4 +1,4 @@
-﻿using RDK.Core.Mathematics;
+﻿using RDK.Core.Helpers;
 using RDK.Core.Threading;
 using System;
 using System.Collections;
@@ -50,11 +50,6 @@ namespace RDK.Core.Extensions
         ///     Avoids if statements when building predicates and lambdas for a query.
         ///     Useful when you don't know at compile time whether a filter should apply.
         /// </summary>
-        /// <typeparam name="TSource"></typeparam>
-        /// <param name="source"></param>
-        /// <param name="condition"></param>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
         public static IEnumerable<TSource> WhereIf<TSource>(this IEnumerable<TSource> source, bool condition, Func<TSource, bool> predicate) 
             => (condition == true) ? source.Where(predicate) : source;
 
@@ -134,12 +129,7 @@ namespace RDK.Core.Extensions
             return elements;
         }
 
-        public static IEnumerable<T> ShuffleLinq<T>(this IEnumerable<T> enumerable)
-        {
-            CryptoRandom rand = new ();
-
-            return enumerable.OrderBy(x => rand.NextDouble());
-        }
+        public static IEnumerable<T> ShuffleLinq<T>(this IEnumerable<T> enumerable) => enumerable.OrderBy(x => MathHelper.CryptoRandom.NextDouble());
 
         public static IEnumerable<T> ShuffleWithProbabilities<T>(this IEnumerable<T> enumerable, IEnumerable<int> probabilities)
         {
