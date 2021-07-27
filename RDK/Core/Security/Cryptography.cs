@@ -210,6 +210,12 @@ namespace RDK.Core.Security
 
         #endregion
 
+        #region BCrypt
+        public static string GetBCrypt(string password) => BCrypt.Net.BCrypt.HashPassword(password);
+
+        public static bool VerifyBCrypt(string input, string hash) => BCrypt.Net.BCrypt.Verify(input, hash);
+        #endregion
+
         public static string GeneratePassword() => Convert.ToBase64String(Encoding.Default.GetBytes(MathHelper.CryptoRandom.Next(50000, int.MaxValue).ToString()));
     }
 }

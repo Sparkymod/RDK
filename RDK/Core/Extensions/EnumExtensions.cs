@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace RDK.Core.Extensions
 {
-    public static class EnumExtentsion
+    public static class EnumExtensions
     {
         /// <summary>
         /// Returns description of enum value if attached with enum member through DiscriptionAttribute
@@ -14,10 +14,23 @@ namespace RDK.Core.Extensions
         /// <see cref="DescriptionAttribute"/>
         public static string ToDescription(this Enum value)
         {
-            FieldInfo fi = value.GetType().GetField(value.ToString());
-            DescriptionAttribute[] descriptions = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            FieldInfo field = value.GetType().GetField(value.ToString());
+            DescriptionAttribute[] descriptions = (DescriptionAttribute[])field.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
-            return (descriptions != null && descriptions.Length > 0) ? descriptions[0].Description : fi.Name;
+            return (descriptions != null && descriptions.Length > 0) ? descriptions[0].Description : field.Name;
+        }
+
+        /// <summary>
+        /// Returns the value with the type of the enum value
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static dynamic GetValue(this Enum value)
+        {
+            FieldInfo field = value.GetType().GetField(value.ToString());
+            Type type = Enum.GetUnderlyingType(value.GetType());
+
+            return Convert.ChangeType(field.GetValue(value), type);
         }
 
         /// <summary>

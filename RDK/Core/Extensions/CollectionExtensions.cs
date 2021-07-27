@@ -173,7 +173,7 @@ namespace RDK.Core.Extensions
 
         public static T RandomElementOrDefault<T>(this IEnumerable<T> enumerable)
         {
-            Random rand = new ();
+            AsyncRandom rand = new ();
             int count = enumerable.Count();
 
             if (count <= 0)
