@@ -56,6 +56,7 @@ namespace RDK.Core.Timers
         {
             Enabled = false;
             IsDisposed = true;
+            GC.SuppressFinalize(this);
         }
 
         public bool ShouldTrigger() => Enabled && !IsDisposed && DateTime.Now >= NextTick;

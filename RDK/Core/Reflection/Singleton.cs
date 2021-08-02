@@ -36,7 +36,7 @@ namespace RDK.Core.Reflection
                     return instance = (T)Activator.CreateInstance(type);
                 }
 
-                ConstructorInfo ctorNonPublic = type.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, Type.EmptyTypes, new ParameterModifier[0]);
+                ConstructorInfo ctorNonPublic = type.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
 
                 if (ctorNonPublic == null)
                 {
@@ -45,7 +45,7 @@ namespace RDK.Core.Reflection
 
                 try
                 {
-                    return instance = (T)ctorNonPublic.Invoke(new object[0]);
+                    return instance = (T)ctorNonPublic.Invoke(Array.Empty<object>());
                 }
                 catch (Exception e)
                 {

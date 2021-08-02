@@ -22,7 +22,7 @@ namespace RDK.Core.IO
 
         public ConsoleBase() { }
 
-        public void SetTitle(string title)
+        public virtual void SetTitle(string title)
         {
             Console.Title = title;
         }

@@ -76,7 +76,7 @@ namespace RDK.Core.Extensions
 
         public static T MaxOf<T, T1>(this IList<T> collection, Func<T, T1> selector) where T1 : IComparable<T1>
         {
-            if (collection.Count == 0) return default(T);
+            if (collection.Count == 0) return default;
 
             T maxT = collection[0];
             T1 maxT1 = selector(maxT);
@@ -95,7 +95,7 @@ namespace RDK.Core.Extensions
 
         public static T MinOf<T, T1>(this IList<T> collection, Func<T, T1> selector) where T1 : IComparable<T1>
         {
-            if (collection.Count == 0) return default(T);
+            if (collection.Count == 0) return default;
 
             T maxT = collection[0];
             T1 maxT1 = selector(maxT);
@@ -201,7 +201,8 @@ namespace RDK.Core.Extensions
         {
             if (collection == null)
             {
-                throw new ArgumentNullException("Collection is null");
+                Console.WriteLine("Collection is null");
+                return;
             }
 
             foreach (KeyValuePair<T, S> item in collection.Where(item => !source.ContainsKey(item.Key)))
@@ -214,12 +215,12 @@ namespace RDK.Core.Extensions
         {
             if (x == null)
             {
-                throw new ArgumentNullException("x");
+                throw new ArgumentNullException(nameof(x));
             }
                 
             if (y == null)
             {
-                throw new ArgumentNullException("y");
+                throw new ArgumentNullException(nameof(y));
             }
 
             int oldLen = x.Length;
@@ -229,7 +230,7 @@ namespace RDK.Core.Extensions
             return x;
         }
 
-        public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key) => dict.TryGetValue(key, out TValue val) ? val : default(TValue);
+        public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key) => dict.TryGetValue(key, out TValue val) ? val : default;
 
         public static T[] Add<T>(this T[] array, T item) => array.Concat(new T[] { item });
 

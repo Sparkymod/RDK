@@ -122,7 +122,7 @@ namespace RDK.Core.Extensions
 
 
         public static string[] SplitAdvanced(this string expression, string delimiter, string qualifier, bool ignoreCase)
-            => SplitAdvanced(expression, new[] { delimiter }, qualifier, false);
+            => SplitAdvanced(expression, new[] { delimiter }, qualifier, ignoreCase);
 
         /// <summary>
         /// Character that invokes an alternative interpretation on the following characters in a character sequence.
