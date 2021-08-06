@@ -5,9 +5,9 @@ namespace RDK.Core.Timers
 {
     public class TimedTimerEntry : IDisposable
     {
-        private int m_interval;
-        private bool m_firstCalled;
-        private int m_delay;
+        private int interval;
+        private bool firstCalled;
+        private int delay;
 
         public DateTime NextTick { get; private set; }
         public DateTime? LastExecute { get; private set; }
@@ -16,20 +16,20 @@ namespace RDK.Core.Timers
         public bool IsDisposed { get; private set; }
         public int Delay
         {
-            get => m_delay;
+            get => delay;
             set
             {
-                NextTick = !m_firstCalled && Enabled && value != -1 ? (NextTick - TimeSpan.FromMilliseconds(m_delay) + TimeSpan.FromMilliseconds(value)) : NextTick;
-                m_delay = value;
+                NextTick = !firstCalled && Enabled && value != -1 ? (NextTick - TimeSpan.FromMilliseconds(delay) + TimeSpan.FromMilliseconds(value)) : NextTick;
+                delay = value;
             }
         }
         public int Interval
         {
-            get => m_interval;
+            get => interval;
             set
             {
-                NextTick = value != -1 ? NextTick - TimeSpan.FromMilliseconds(m_interval) + TimeSpan.FromMilliseconds(value) : NextTick;
-                m_interval = value;
+                NextTick = value != -1 ? NextTick - TimeSpan.FromMilliseconds(interval) + TimeSpan.FromMilliseconds(value) : NextTick;
+                interval = value;
             }
         }
 
@@ -37,7 +37,7 @@ namespace RDK.Core.Timers
 
         public TimedTimerEntry(int delay, int interval, Action action)
         {
-            m_delay = delay;
+            this.delay = delay;
             Interval = interval;
             Action = action;
         }
@@ -46,7 +46,7 @@ namespace RDK.Core.Timers
 
         public void Start()
         {
-            NextTick = DateTime.Now + TimeSpan.FromMilliseconds(m_delay);
+            NextTick = DateTime.Now + TimeSpan.FromMilliseconds(delay);
             Enabled = true;
         }
 
@@ -73,7 +73,7 @@ namespace RDK.Core.Timers
                 NextTick = DateTime.Now + TimeSpan.FromMilliseconds(Interval);
             }
 
-            m_firstCalled = true;
+            firstCalled = true;
             LastExecute = DateTime.Now;
 
             return Enabled || IsDisposed;

@@ -9,7 +9,6 @@ using RDK;
 using RDK.Core;
 using RDK.Core.Helpers;
 using RDK.Core.Threading;
-using RDK.Core.Styling;
 using RDK.Core.Security;
 using RDK.Core.Extensions;
 using System.Collections.Generic;
@@ -25,11 +24,6 @@ namespace RDK.Test
     {
         static void Main(string[] args)
         {
-            Settings.Config.LoadBasic();
-
-            IContainer testContainer = Settings.Autofac.Configure();
-            using ILifetimeScope scope = testContainer.BeginLifetimeScope();
-
             // Load .env file
             string dotenv = Path.Combine(Settings.Paths.SOLUTION_DIR, "rdk.env");
 
@@ -38,8 +32,12 @@ namespace RDK.Test
                 throw new ArgumentException(".env file not found!");
             }
             Settings.DotEnv.Load(dotenv);
+            Settings.Config.LoadBasic();
 
+            IContainer testContainer = Settings.Autofac.Configure();
+            using ILifetimeScope scope = testContainer.BeginLifetimeScope();
             scope.Resolve<DatabaseManager>();
+
             DatabaseManager.InitDatabase();
         }
     }

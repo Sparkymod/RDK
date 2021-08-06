@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using RDK.Core.Styling;
+using RDK.Core.Extensions;
 
 namespace RDK.Core.Reflection
 {
