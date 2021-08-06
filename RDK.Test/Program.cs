@@ -15,6 +15,9 @@ using RDK.Core.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using Pastel;
+using System.IO;
+using RDK.Api;
+using RDK.Database.Manager;
 
 namespace RDK.Test
 {
@@ -22,19 +25,22 @@ namespace RDK.Test
     {
         static void Main(string[] args)
         {
-            Config.Settings.LoadBasic();
+            Settings.Config.LoadBasic();
 
-            IContainer testContainer = Config.Autofac.Configure();
+            IContainer testContainer = Settings.Autofac.Configure();
             using ILifetimeScope scope = testContainer.BeginLifetimeScope();
 
-            string line;
-            while ((line = Console.ReadLine()) != null)
+            // Load .env file
+            string dotenv = Path.Combine(Settings.Paths.SOLUTION_DIR, "rdk.env");
+
+            if (!File.Exists(dotenv))
             {
-                if (!string.IsNullOrEmpty(line) || line.Length > 0 && line.Substring(0, 1).Equals("/"))
-                {
-                    string[] argss = line[1..].ToLower().Split(" ");
-                }
+                throw new ArgumentException(".env file not found!");
             }
+            Settings.DotEnv.Load(dotenv);
+
+            scope.Resolve<DatabaseManager>();
+            DatabaseManager.InitDatabase();
         }
     }
 }

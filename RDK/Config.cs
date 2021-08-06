@@ -6,16 +6,22 @@ using Pastel;
 using RDK.Core.Styling;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.IO;
+using RDK.Database;
+using RDK.Database.Manager;
 
 namespace RDK
 {
-    public static class Config
+    public static class Settings
     {
-        public static class Settings
+        // Current settings for this library.
+        public static class Config
         {
             private static ConsoleBase ConsoleInterface { get; set; } = new ConsoleBase();
             public static readonly string ConsoleTitle = "RDK Library";
-            public static readonly string Version = "0.0.3";
+            public static readonly string Version = "0.0.7";
             public static readonly string[] AsciiLogo =
             {
             $"{ConsoleTitle} - {Version}",
@@ -28,13 +34,14 @@ namespace RDK
         };
             public static readonly string Language = "en-US";
 
-            // Load basic settings for initialization
+            // Load basic settings for initialization.
             public static void LoadBasic()
             {
                 LoadConsole();
                 SetCultureInfo();
             }
 
+            // Load Console settings.
             private static void LoadConsole()
             {
                 Serilog.Load();
@@ -45,25 +52,44 @@ namespace RDK
                 ConsoleInterface.Start();
             }
 
+            // Set Global Language for this program
             private static void SetCultureInfo()
             {
                 // Force Globalization to en-US because we use periods instead of commas for decimals
                 CultureInfo.CurrentCulture = new CultureInfo(Language);
             }
+
+            // Load Database settings
+            internal static string GetConnectionString()
+            {
+                string server = Environment.GetEnvironmentVariable("DB_IP");
+                string port = Environment.GetEnvironmentVariable("DB_PORT");
+                string name = Environment.GetEnvironmentVariable("DB_NAME");
+                string user = Environment.GetEnvironmentVariable("DB_USER");
+                string password = Environment.GetEnvironmentVariable("DB_PASSWORD");
+
+                return $"server={server};port={port};database={name};user={user};password={password}";
+            }
         }
 
+        // Autofac Settings.
         public static class Autofac
         {
             public static IContainer Configure()
             {
                 ContainerBuilder builder = new();
-
                 RegisterLogger(builder);
-                builder.RegisterAssemblyTypes(Assembly.LoadFrom("RDK")).SingleInstance();
+
+                builder.Register(db =>
+                {
+                    DbContextOptionsBuilder optionsBuilder = new ();
+                    optionsBuilder.UseMySQL(Config.GetConnectionString());
+                    return new DatabaseManager(new DatabaseContext(optionsBuilder.Options));
+                });
                 return builder.Build();
             }
 
-            public static void RegisterLogger(ContainerBuilder builder)
+            private static void RegisterLogger(ContainerBuilder builder)
             {
                 builder.Register((log) =>
                 {
@@ -79,6 +105,7 @@ namespace RDK
             }
         }
 
+        // Serilog Settings.
         public static class Serilog
         {
             private static string Template { get; set; } = "{Timestamp:HH:mm:ss} [{Level:u3}]: {Message:lj} {NewLine}" + "{Exception}".Pastel("#E05561");
@@ -92,6 +119,31 @@ namespace RDK
                     outputTemplate: Template)
                     .CreateLogger();
             }
+        }
+
+        // Dot Environment Settings.
+        public static class DotEnv
+        {
+            public static void Load(string filePath)
+            {
+                foreach (string line in File.ReadAllLines(filePath))
+                {
+                    string[] parts = line.Split('=', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+
+                    if (parts.Length != 2)
+                    {
+                        continue;
+                    }
+
+                    Environment.SetEnvironmentVariable(parts[0], parts[1]);
+                }
+            }
+        }
+
+        // Set constant paths.
+        public static class Paths
+        {
+            public static readonly string SOLUTION_DIR = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../.."));
         }
     }
 }
