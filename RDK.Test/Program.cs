@@ -24,14 +24,7 @@ namespace RDK.Test
     {
         static void Main(string[] args)
         {
-            // Load .env file
-            string dotenv = Path.Combine(Settings.Paths.SOLUTION_DIR, "rdk.env");
-
-            if (!File.Exists(dotenv))
-            {
-                throw new ArgumentException(".env file not found!");
-            }
-            Settings.DotEnv.Load(dotenv);
+            Settings.DotEnv.Load();
             Settings.Config.LoadBasic();
 
             IContainer testContainer = Settings.Autofac.Configure();

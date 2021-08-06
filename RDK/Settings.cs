@@ -130,9 +130,17 @@ namespace RDK
         // Dot Environment Settings.
         public static class DotEnv
         {
-            public static void Load(string filePath)
+            public static string FilePath { get; set; }
+
+            public static void Load(string filepath = "rdk.env")
             {
-                foreach (string line in File.ReadAllLines(filePath))
+                FilePath = Path.Combine(Paths.SOLUTION_DIR, filepath);
+
+                if (!File.Exists(FilePath))
+                {
+                    throw new ArgumentException(".env file not found!");
+                }
+                foreach (string line in File.ReadAllLines(FilePath))
                 {
                     string[] parts = line.Split('=', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
