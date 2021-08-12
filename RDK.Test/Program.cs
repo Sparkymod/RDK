@@ -17,6 +17,15 @@ using Pastel;
 using System.IO;
 using RDK.Api;
 using RDK.Database.Manager;
+using System.Numerics;
+using DijkstraAlgorithm.Graphing;
+using Dijkstra.NET;
+using Dijkstra.NET.Graph;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
+using System.Windows;
+using RDK.Database.Core;
 
 namespace RDK.Test
 {
@@ -26,12 +35,19 @@ namespace RDK.Test
         {
             Settings.DotEnv.Load();
             Settings.Config.LoadBasic();
+            Settings.Autofac.InitializeDatabase();
+            Settings.Autofac.Manager(out AccountManager accountManager);
 
-            IContainer testContainer = Settings.Autofac.Configure();
-            using ILifetimeScope scope = testContainer.BeginLifetimeScope();
-            scope.Resolve<DatabaseManager>();
+            try
+            {
+                Console.WriteLine();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return;
+            }
 
-            DatabaseManager.InitDatabase();
         }
     }
 }

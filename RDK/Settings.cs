@@ -2,15 +2,16 @@
 using System.Globalization;
 using Autofac;
 using Serilog;
-using Pastel;
 using Microsoft.Extensions.Logging;
-using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;
 using RDK.Database;
 using RDK.Database.Manager;
 using Serilog.Sinks.SystemConsole.Themes;
+using Pastel;
+using System.Collections.Generic;
+using RDK.Database.Core;
 
 namespace RDK
 {
@@ -92,6 +93,12 @@ namespace RDK
                     optionsBuilder.UseMySQL(Config.GetConnectionString());
                     return new DatabaseManager(new DatabaseContext(optionsBuilder.Options));
                 });
+                builder.Register(db =>
+                {
+                    DbContextOptionsBuilder optionsBuilder = new();
+                    optionsBuilder.UseMySQL(Config.GetConnectionString());
+                    return new AccountManager(new DatabaseContext(optionsBuilder.Options));
+                });
                 return builder.Build();
             }
 
@@ -108,6 +115,25 @@ namespace RDK
                 builder.RegisterGeneric(typeof(Logger<>))
                     .As(typeof(ILogger<>))
                     .SingleInstance();
+            }
+
+            private static void BeginScope(out ILifetimeScope scope)
+            {
+                IContainer testContainer = Configure();
+                scope = testContainer.BeginLifetimeScope();
+            }
+
+            public static void InitializeDatabase()
+            {
+                BeginScope(out ILifetimeScope scope);
+                scope.Resolve<DatabaseManager>();
+                DatabaseManager.InitDatabase();
+            }
+
+            public static void Manager(out AccountManager accountManager)
+            {
+                BeginScope(out ILifetimeScope scope);
+                accountManager = scope.Resolve<AccountManager>();
             }
         }
 

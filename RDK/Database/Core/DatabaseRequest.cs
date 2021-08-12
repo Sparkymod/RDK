@@ -9,7 +9,7 @@ using Pastel;
 
 namespace RDK.Database.Core
 {
-    public abstract class DatabaseRequest<TEntity, TContext> : IDisposable, IRepository<TEntity> where TEntity : class, IEntity where TContext : DbContext
+    public abstract class DatabaseRequest<TEntity, TContext> : IDisposable, IModel<TEntity> where TEntity : class, IEntity where TContext : DbContext
     {
         public static TContext Context { get; set; }
 

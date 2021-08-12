@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RDK.Database.Core;
 using RDK.Database.Models;
 
 namespace RDK.Database

@@ -13,4 +13,10 @@
     <Folder Include="Example_1\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Dijkstra.NET" Version="1.2.1" />
+    <PackageReference Include="DijkstraAlgorithm.NetCore" Version="1.0.0" />
+    <PackageReference Include="NLua" Version="1.5.9" />
+  </ItemGroup>
+
 </Project>
