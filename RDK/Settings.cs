@@ -4,14 +4,9 @@ using Autofac;
 using Serilog;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.IO;
 using RDK.Database;
 using RDK.Database.Manager;
 using Serilog.Sinks.SystemConsole.Themes;
-using Pastel;
-using System.Collections.Generic;
-using RDK.Database.Core;
 
 namespace RDK
 {
