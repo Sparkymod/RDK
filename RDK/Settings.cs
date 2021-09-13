@@ -12,21 +12,24 @@ namespace RDK
 {
     public static class Settings
     {
-        // Set constant paths.
+        /// <summary>
+        /// Set constant paths.
+        /// </summary>
         public static class Paths
         {
             public static readonly string SOLUTION_DIR = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../.."));
         }
 
-        // Current settings for this library.
+        /// <summary>
+        /// Current settings for this library.
+        /// </summary>
         public static class Config
         {
             private static ConsoleBase ConsoleInterface { get; set; } = new ConsoleBase();
             public static string ConsoleTitle { get; private set; } = Environment.GetEnvironmentVariable("TITLE");
             public static string Version { get; private set; } = Environment.GetEnvironmentVariable("VERSION");
             public static string Language { get; private set; } = Environment.GetEnvironmentVariable("LANGUAGE");
-
-            public static readonly string[] AsciiLogo =
+            public static string[] AsciiLogo { get; private set; } =
             {
             $"{ConsoleTitle} - {Version}",
             " ____    ____    _  __",
@@ -37,14 +40,18 @@ namespace RDK
             "Library use as helper in C# .NET 6.0 projects.",
             };
 
-            // Load basic settings for initialization.
+            /// <summary>
+            /// Load basic settings for initialization.
+            /// </summary>
             public static void LoadBasic()
             {
                 LoadConsole();
                 SetCultureInfo();
             }
 
-            // Load Console settings.
+            /// <summary>
+            /// Load Console settings.
+            /// </summary>
             private static void LoadConsole()
             {
                 Serilog.LoadLog();
@@ -54,15 +61,19 @@ namespace RDK
                 ConsoleInterface.Start();
             }
 
-            // Set Global Language for this program
+            /// <summary>
+            /// Set Global Language for this program.
+            /// </summary>
             private static void SetCultureInfo()
             {
-                // Force Globalization to en-US because we use periods instead of commas for decimals
                 CultureInfo.CurrentCulture = new CultureInfo(Language);
             }
 
-            // Load Database settings
-            internal static string GetConnectionString()
+            /// <summary>
+            /// Load Database settings.
+            /// </summary>
+            /// <returns></returns>
+            public static string GetConnectionString()
             {
                 string server = Environment.GetEnvironmentVariable("DB_IP");
                 string port = Environment.GetEnvironmentVariable("DB_PORT");
@@ -77,6 +88,10 @@ namespace RDK
         // Autofac Settings.
         public static class Autofac
         {
+            /// <summary>
+            /// Configure the start of the Autofac.
+            /// </summary>
+            /// <returns></returns>
             public static IContainer Configure()
             {
                 ContainerBuilder builder = new();
@@ -118,6 +133,9 @@ namespace RDK
                 scope = testContainer.BeginLifetimeScope();
             }
 
+            /// <summary>
+            /// Using DatabaseManager to initialize DB.
+            /// </summary>
             public static void InitializeDatabase()
             {
                 BeginScope(out ILifetimeScope scope);
@@ -125,10 +143,11 @@ namespace RDK
                 DatabaseManager.InitDatabase();
             }
 
-            public static void Manager(out AccountManager accountManager)
+            public static void GetService()
             {
                 BeginScope(out ILifetimeScope scope);
-                accountManager = scope.Resolve<AccountManager>();
+                // TODO: return generic component type
+                //typeResult = scope.Resolve<T>();
             }
         }
 
