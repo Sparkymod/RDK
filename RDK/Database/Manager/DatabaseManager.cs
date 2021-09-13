@@ -14,7 +14,7 @@ namespace RDK.Database.Manager
 
         private static void CreateDatabase() => Context.Database.EnsureCreated();
 
-        public static void InitDatabase()
+        public void InitDatabase()
         {
             if (Exists())
             {

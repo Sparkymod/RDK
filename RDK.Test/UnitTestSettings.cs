@@ -1,4 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RDK.Core.Reflection;
+using RDK.Database;
+using RDK.Database.Manager;
 
 namespace RDK.TestSettings;
 
@@ -9,12 +13,5 @@ public class UnitTestSettings
     public void TestSerilog()
     {
         Settings.Serilog.LoadLog();
-    }
-
-    [TestMethod]
-    public void TestConfig()
-    {
-        /// Not Passing because of no Console is being instanciate.
-        //Settings.Config.LoadBasic();
     }
 }

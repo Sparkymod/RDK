@@ -140,7 +140,7 @@ namespace RDK
             {
                 BeginScope(out ILifetimeScope scope);
                 scope.Resolve<DatabaseManager>();
-                DatabaseManager.InitDatabase();
+                //DatabaseManager.InitDatabase();
             }
 
             public static void GetService()
