@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pastel;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -159,5 +160,17 @@ namespace RDK.Core.Extensions
         public static string GetSHA256(this string input) => Security.Cryptography.GetSHA256(input);
 
         public static string GetRSA(this string input, RSAParameters param) => Security.Cryptography.EncryptRSA(input, param);
+    }
+
+    /// <summary>
+    /// Make the strings to a specific color using the NuGet Package <b>Pastel.</b>
+    /// </summary>
+    public static class ColorStringExtensions
+    {
+        public static string Green(this string input) => input.Pastel("#aced66");
+
+        public static string Red(this string input) => input.Pastel("#E05561");
+
+        public static string Yellow(this string input) => input.Pastel("#FFE212");
     }
 }
