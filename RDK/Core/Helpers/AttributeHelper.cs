@@ -7,7 +7,7 @@ namespace RDK.Core.Helpers
         [AttributeUsage(AttributeTargets.Method)]
         public class Cyclic : Attribute
         {
-            public int Time { get; set;}
+            public int Time { get; set; }
             public Cyclic(int time) => Time = time;
         }
 

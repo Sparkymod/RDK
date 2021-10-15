@@ -165,11 +165,13 @@ namespace RDK.Core.Extensions
     /// <summary>
     /// Make the strings to a specific color using the NuGet Package <b>Pastel.</b>
     /// </summary>
-    public static class ColorStringExtensions
+    public static class Color
     {
-        public static string Green(this string input) => input.Pastel("#aced66");
+        public static string Green(this string input) => input.Pastel("#ACED66");
 
         public static string Red(this string input) => input.Pastel("#E05561");
+
+        public static string Orange(this string input) => input.Pastel("#FFB300");
 
         public static string Yellow(this string input) => input.Pastel("#FFE212");
     }

@@ -1,12 +1,11 @@
 ﻿using RDK.Core.IO;
-using System.Globalization;
-using Autofac;
 using Serilog;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using RDK.Database;
-using RDK.Database.Manager;
+using Serilog.Core;
+using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
+using System;
+using System.Globalization;
+using System.IO;
 
 namespace RDK
 {
@@ -54,7 +53,6 @@ namespace RDK
             /// </summary>
             private static void LoadConsole()
             {
-                Serilog.LoadLog();
                 ConsoleInterface.Logo = AsciiLogo;
                 ConsoleInterface.DrawAsciiLogo();
                 ConsoleInterface.SetTitle($"{ConsoleTitle} - {Version}");
@@ -72,8 +70,8 @@ namespace RDK
             /// <summary>
             /// Load Database settings.
             /// </summary>
-            /// <returns></returns>
-            public static string GetConnectionString()
+            /// <returns>Connection string for MySQL DB.</returns>
+            public static string GetMySQLDBConnectionString()
             {
                 string server = Environment.GetEnvironmentVariable("DB_IP");
                 string port = Environment.GetEnvironmentVariable("DB_PORT");
@@ -83,91 +81,44 @@ namespace RDK
 
                 return $"server={server};port={port};database={name};user={user};password={password}";
             }
-        }
-
-        // Autofac Settings.
-        public static class Autofac
-        {
-            /// <summary>
-            /// Configure the start of the Autofac.
-            /// </summary>
-            /// <returns></returns>
-            public static IContainer Configure()
-            {
-                ContainerBuilder builder = new();
-                RegisterLogger(builder);
-
-                builder.Register(db =>
-                {
-                    DbContextOptionsBuilder optionsBuilder = new ();
-                    optionsBuilder.UseMySQL(Config.GetConnectionString());
-                    return new DatabaseManager(new DatabaseContext(optionsBuilder.Options));
-                });
-                builder.Register(db =>
-                {
-                    DbContextOptionsBuilder optionsBuilder = new();
-                    optionsBuilder.UseMySQL(Config.GetConnectionString());
-                    return new AccountManager(new DatabaseContext(optionsBuilder.Options));
-                });
-                return builder.Build();
-            }
-
-            private static void RegisterLogger(ContainerBuilder builder)
-            {
-                builder.Register((log) =>
-                {
-                    LoggerFactory factory = new();
-                    factory.AddSerilog();
-                    return factory;
-                })
-                    .As<ILoggerFactory>()
-                    .SingleInstance();
-                builder.RegisterGeneric(typeof(Logger<>))
-                    .As(typeof(ILogger<>))
-                    .SingleInstance();
-            }
-
-            private static void BeginScope(out ILifetimeScope scope)
-            {
-                IContainer testContainer = Configure();
-                scope = testContainer.BeginLifetimeScope();
-            }
 
             /// <summary>
-            /// Using DatabaseManager to initialize DB.
+            /// Initialize Serilog.
             /// </summary>
-            public static void InitializeDatabase()
+            /// <returns>Instanciate a serilog for the current project.</returns>
+            public static Logger InitializeSerilog()
             {
-                BeginScope(out ILifetimeScope scope);
-                scope.Resolve<DatabaseManager>();
-                //DatabaseManager.InitDatabase();
-            }
-
-            public static void GetService()
-            {
-                BeginScope(out ILifetimeScope scope);
-                // TODO: return generic component type
-                //typeResult = scope.Resolve<T>();
+                Log.Logger = Serilog.Config().CreateLogger();
+                return Serilog.Config().CreateLogger();
             }
         }
 
-        // Serilog Settings.
+        /// <summary>
+        /// Serilog Settings.
+        /// </summary>
         public static class Serilog
         {
-            private static string Template { get; set; } = "{Timestamp:HH:mm:ss} [{Level:u3}]: {Message:lj} {NewLine}" + "{Exception}";
+            public static string Template { get; set; } = "{Timestamp:HH:mm:ss} [{Level:u4}]: {Message:lj} {NewLine}" + "{Exception}";
 
             /// <summary>
             /// Custom configuration for serilog to show on console and save to file.
             /// </summary>
-            public static void LoadLog()
+            public static LoggerConfiguration Config()
             {
-                Log.Logger = new LoggerConfiguration().MinimumLevel.Verbose().WriteTo.Console(theme: Theme.RDKSerilogTheme,
-                    outputTemplate: Template)
-                    .CreateLogger();
+                return new LoggerConfiguration()
+                    .MinimumLevel.Override("Default", LogEventLevel.Information)
+                    .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+                    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+                    .MinimumLevel.Verbose()
+                    .Enrich.FromLogContext()
+                    .WriteTo.Console(theme: Theme.RDKSerilogTheme, outputTemplate: Template)
+                    .WriteTo.File(Path.Combine(Paths.SOLUTION_DIR, "maplecodex2.log"), LogEventLevel.Error);
             }
         }
 
-        // Dot Environment Settings.
+        /// <summary>
+        /// Dot Environment Settings.
+        /// </summary>
         public static class DotEnv
         {
             public static string FilePath { get; set; }
@@ -194,7 +145,9 @@ namespace RDK
             }
         }
 
-        // Diferent styles for specific things.
+        /// <summary>
+        /// Diferent styles for specific things.
+        /// </summary>
         public static class Theme
         {
             public static CustomConsoleTheme RDKSerilogTheme { get; } = new CustomConsoleTheme();
@@ -224,8 +177,8 @@ namespace RDK
                     Console.ResetColor();
                 }
 
-                // Custom RDK Theme
                 /// <summary>
+                /// Custom RDK Theme =
                 /// The number of characters written by the <see cref="Reset(TextWriter)"/> method.
                 /// </summary>
                 public override int Set(TextWriter output, ConsoleThemeStyle style)

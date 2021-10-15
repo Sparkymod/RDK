@@ -1,6 +1,6 @@
-﻿using System;
+﻿using RDK.Core.Extensions;
+using System;
 using System.Reflection;
-using RDK.Core.Extensions;
 
 namespace RDK.Core.Reflection
 {

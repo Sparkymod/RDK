@@ -1,9 +1,9 @@
-﻿using System;
+﻿using RDK.Core.Helpers;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using RDK.Core.Helpers;
 
 namespace RDK.Core.Security
 {

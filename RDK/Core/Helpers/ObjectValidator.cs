@@ -20,7 +20,7 @@ namespace RDK.Core.Helpers
         /// <param name="lifeTime"></param>
         public ObjectValidator(Func<T> creator, TimeSpan? lifeTime = null)
         {
-            Creator  = creator;
+            Creator = creator;
             LifeTime = lifeTime;
         }
 
@@ -48,6 +48,6 @@ namespace RDK.Core.Helpers
 
         private void NotifyObjectInvalidated() => ObjectInvalidated?.Invoke(this);
 
-        private bool IsValid => Valid && (LifeTime == null || DateTime.Now - LastCreationDate < LifeTime.Value); 
+        private bool IsValid => Valid && (LifeTime == null || DateTime.Now - LastCreationDate < LifeTime.Value);
     }
 }

@@ -12,7 +12,7 @@ namespace RDK.Core.Extensions
     {
         public static string ByteArrayToString(this byte[] byteArray)
         {
-            StringBuilder sBuilder = new (byteArray.Length);
+            StringBuilder sBuilder = new(byteArray.Length);
 
             foreach (byte oneByte in byteArray)
             {
@@ -42,7 +42,7 @@ namespace RDK.Core.Extensions
 
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
-            HashSet<TKey> knownKeys = new ();
+            HashSet<TKey> knownKeys = new();
             return source.Where(element => knownKeys.Add(keySelector(element)));
         }
 
@@ -50,7 +50,7 @@ namespace RDK.Core.Extensions
         ///     Avoids if statements when building predicates and lambdas for a query.
         ///     Useful when you don't know at compile time whether a filter should apply.
         /// </summary>
-        public static IEnumerable<TSource> WhereIf<TSource>(this IEnumerable<TSource> source, bool condition, Func<TSource, bool> predicate) 
+        public static IEnumerable<TSource> WhereIf<TSource>(this IEnumerable<TSource> source, bool condition, Func<TSource, bool> predicate)
             => (condition == true) ? source.Where(predicate) : source;
 
         public static IEnumerable<TSource> WhereIf<TSource>(this IEnumerable<TSource> source, bool condition, Func<TSource, int, bool> predicate)
@@ -133,7 +133,7 @@ namespace RDK.Core.Extensions
 
         public static IEnumerable<T> ShuffleWithProbabilities<T>(this IEnumerable<T> enumerable, IEnumerable<int> probabilities)
         {
-            Random rand = new ();
+            Random rand = new();
 
             List<T> elements = enumerable.ToList();
             T[] result = new T[elements.Count];
@@ -173,7 +173,7 @@ namespace RDK.Core.Extensions
 
         public static T RandomElementOrDefault<T>(this IEnumerable<T> enumerable)
         {
-            AsyncRandom rand = new ();
+            AsyncRandom rand = new();
             int count = enumerable.Count();
 
             if (count <= 0)
@@ -184,7 +184,7 @@ namespace RDK.Core.Extensions
 
         public static string[] ToStringArr(this IEnumerable collection)
         {
-            List<string> strs = new ();
+            List<string> strs = new();
             IEnumerator colEnum = collection.GetEnumerator();
             while (colEnum.MoveNext())
             {
@@ -217,7 +217,7 @@ namespace RDK.Core.Extensions
             {
                 throw new ArgumentNullException(nameof(x));
             }
-                
+
             if (y == null)
             {
                 throw new ArgumentNullException(nameof(y));
@@ -249,7 +249,7 @@ namespace RDK.Core.Extensions
         /// <typeparam name="TValue">Element type of the grouping and dictionary list.</typeparam>
         /// <param name="groupings">The enumeration of groupings from a GroupBy() clause.</param>
         /// <returns>A dictionary of groupings such that the key of the dictionary is TKey type and the value is List of TValue type.</returns>
-        public static Dictionary<TKey, List<TValue>> ToDictionary<TKey, TValue>(this IEnumerable<IGrouping<TKey, TValue>> groupings) 
+        public static Dictionary<TKey, List<TValue>> ToDictionary<TKey, TValue>(this IEnumerable<IGrouping<TKey, TValue>> groupings)
             => groupings.ToDictionary(group => group.Key, group => group.ToList());
     }
 }

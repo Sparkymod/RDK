@@ -72,8 +72,8 @@ namespace RDK.Core.Extensions
         /// parameter types, and searches base interfaces.
         /// </summary>
         /// <exception cref="AmbiguousMatchException"/>
-        public static MethodInfo GetMethodExt(this Type thisType, string name, int genericArgumentsCount, params Type[] parameterTypes) 
-            => GetMethodExt(thisType, name, genericArgumentsCount, 
+        public static MethodInfo GetMethodExt(this Type thisType, string name, int genericArgumentsCount, params Type[] parameterTypes)
+            => GetMethodExt(thisType, name, genericArgumentsCount,
                 BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy, parameterTypes);
 
         /// <summary>

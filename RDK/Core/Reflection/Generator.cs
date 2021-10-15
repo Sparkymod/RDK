@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace RDK.Core.Reflection
 {
@@ -35,7 +36,7 @@ namespace RDK.Core.Reflection
                 }
             }
 
-            return (T) generatedParams;
+            return (T)generatedParams;
         }
     }
 }
